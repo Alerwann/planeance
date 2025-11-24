@@ -17,11 +17,15 @@ import 'package:planeance/utils/hive_helper.dart';
 /// de l’opération. En cas d’erreur, le message est affiché en mode debug grâce à `kDebugMode`.
 class EcheanceProvider extends ChangeNotifier with HiveHelper {
   /// Boîte Hive contenant les objets [EcheanceModel].
-  final Box<EcheanceModel> _box = Hive.box<EcheanceModel>(Constant.echeanceBoxName);
+  final Box<EcheanceModel> _box = Hive.box<EcheanceModel>(
+    Constant.echeanceBoxName,
+  );
 
   /// Liste complète des échéances stockées.
   List<EcheanceModel> get all => _box.values.toList();
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   // -----------------------------------------------------------------
   // CRUD – Create
@@ -29,9 +33,15 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   /// Ajoute une nouvelle [EcheanceModel] dans la boîte.
   ///
   /// Retourne `true` si l’ajout a réussi, sinon `false`.
-  
+
   Future<bool> add(EcheanceModel e) {
-    return handle(() => _box.add(e), "Erreur lors de l'ajout");
+    _isLoading = true;
+    notifyListeners();
+    final handleVal = handle(() => _box.add(e), "Erreur lors de l'ajout");
+
+    _isLoading = false;
+    notifyListeners();
+    return handleVal;
   }
 
   // -----------------------------------------------------------------
