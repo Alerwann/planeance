@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
-
 /// Retourne un sélecteur de date et met à jour le contrôleur et la valeur.
 ///
 /// * **ctrl** : le [TextEditingController] du champ texte à mettre à jour.
 /// * **onPicked** : callback exécuté avec la [DateTime] sélectionnée.
 ///
 /// La fonction ne fait rien si l’utilisateur annule le sélecteur.
-/// 
+///
 
 class TapInputWideget extends StatefulWidget {
   final String nameInput;
@@ -67,7 +65,8 @@ class _TapInputWidegetState extends State<TapInputWideget> {
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
       ),
-      onTap: () => _pickDate,
+      onTap: () =>
+ _pickDate(),
       validator: (v) => v == null || v.isEmpty ? 'Choisissez une date' : null,
     );
   }

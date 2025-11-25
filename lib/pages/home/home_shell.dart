@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeance/pages/all_type_echeances/choice_directory_echeance.dart';
 import 'package:planeance/pages/create_echeance/create_echeance.dart';
 import 'package:planeance/pages/home/home.dart';
 import 'package:planeance/pages/parameters/parameters.dart';
@@ -24,7 +25,12 @@ class _HomeshellState extends State<Homeshell> {
   /// en bas. Le corps affiche la page correspondant à `_currentIndex`.
   @override
   Widget build(BuildContext context) {
-    final List pages = [Home(), CreateEcheance(), Parameters()];
+    final List pages = [
+      Home(),
+      ChoiceDirectoryEcheance(),
+      CreateEcheance(),
+      Parameters(),
+    ];
     return Scaffold(
       body: pages[_currentIndex],
       bottomNavigationBar: StylishBottomBar(
@@ -37,6 +43,16 @@ class _HomeshellState extends State<Homeshell> {
           BottomBarItem(
             icon: Icon(Icons.calendar_month_rounded),
             title: Text("Planning"),
+            selectedColor: Theme.of(
+              context,
+            ).extension<CustomSelectColors>()!.selectedIcon,
+            unSelectedColor: Theme.of(
+              context,
+            ).extension<CustomUnselectColors>()!.unselectedIcon,
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.folder),
+            title: Text("Dossiers"),
             selectedColor: Theme.of(
               context,
             ).extension<CustomSelectColors>()!.selectedIcon,

@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:planeance/data/constant.dart';
 import 'package:planeance/planeance.dart';
+import 'package:planeance/widget/card_list_title.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -10,30 +13,114 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String wichSelected = Constant.weekPeriod;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Planéchance')),
       body: Consumer<EcheanceProvider>(
         builder: (context, echeanceP, _) {
+          final echeancesList = echeanceP.getEcheancesForPeriod(wichSelected);
           return Center(
             child: Column(
-    
-                    children: [
-                      Text("Echeance en apporche"),
-                      Text("Nombre total d'échances : ${echeanceP.all.length}")
-                      // ListView.builder(
-                      //   itemCount: echeanceP.all.length,
-                      //   itemBuilder: (context, index) {
-                      //     return Text(echeanceP.all[index].echeanceName);
-                      //   },
-                      // ),
-                    ],
+           spacing: 15,
+              children: [
+                if (kDebugMode)
+                  ElevatedButton(
+                    onPressed: () async {
+                      await echeanceP.deleteAll();
+                    },
+                    child: Text("Réinitialiser box echeance"),
                   ),
-          
+                Text(
+                  "Echéance en apporche",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 5,
+                  alignment: WrapAlignment.center,
+
+                  children: [
+                    buttonChoice(Constant.daysPeriod, echeanceP),
+                    buttonChoice(Constant.weekPeriod, echeanceP),
+                    buttonChoice(Constant.monthPeriod, echeanceP),
+                  ],
+                ),
+
+                Text("Nombre total d'échances : ${echeanceP.all.length}"),
+
+                Text(
+                  "${_getTitleForSelection(wichSelected)} : ${echeancesList.length}",
+                ),
+
+                echeancesList.isEmpty
+                    ? Text(
+                        "Bonne nouvelle!\nTu n'as pas d'échéances",
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true, // Important dans une Column
+                        itemCount: echeancesList.length,
+                        itemBuilder: (context, index) {
+                          final echeance = echeancesList[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CardListTitle(
+                              echeanceP: echeanceP,
+                              echeance: echeance,
+                            )
+                          );
+                        },
+                      ),
+              ],
+            ),
           );
         },
       ),
     );
+  }
+
+  ElevatedButton buttonChoice(String typeChoice, EcheanceProvider echeanceP) {
+    late String nameButton;
+    switch (typeChoice) {
+      case Constant.daysPeriod:
+        nameButton = "Par jour";
+        break;
+      case Constant.monthPeriod:
+        nameButton = "Par mois";
+        break;
+      default:
+        nameButton = "Par semaine";
+        break;
+    }
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: wichSelected == typeChoice
+            ? Colors.green
+            : Colors.amber,
+      ),
+      onPressed: () {
+        setState(() {
+          wichSelected = typeChoice;
+        });
+      },
+      child: Text(nameButton),
+    );
+  }
+
+  String _getTitleForSelection(String selection) {
+    switch (selection) {
+      case Constant.daysPeriod:
+        return "Échéance de la journée";
+      case Constant.monthPeriod:
+        return "Échéance du mois";
+      case Constant.weekPeriod:
+      default:
+        return "Échéance de la semaine";
+    }
   }
 }

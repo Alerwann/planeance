@@ -124,6 +124,7 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                     TapInputWideget(
                       nameInput: 'Date de fin',
                       nameController: _endCtrl,
+                      startDateTime: _beginDate,
                       onDateSelected: (nouvelleDate) {
                         setState(() {
                           _endDate = nouvelleDate;

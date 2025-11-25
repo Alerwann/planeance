@@ -57,6 +57,46 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   /// Retourne `null` si l’index est hors limites.
   EcheanceModel? getByIndex(int index) => _box.getAt(index);
 
+  /// Récupère toutes les échéances qui prennent fin dans les 7jours.
+  ///
+  /// Retourne 'nul' si aucune échéance n'a été trouvé.
+
+  List<EcheanceModel> getEcheancesForPeriod(String period) {
+    final now = DateTime.now();
+
+    final today = DateTime(now.year, now.month, now.day);
+    DateTime nextPeriod;
+
+    switch (period) {
+      case Constant.daysPeriod:
+        nextPeriod = now;
+        break;
+      case Constant.weekPeriod:
+        nextPeriod = today.add(const Duration(days: 7));
+        break;
+      case Constant.monthPeriod:
+        nextPeriod = today.add(const Duration(days: 30));
+        break;
+      default:
+        nextPeriod = today.add(const Duration(days: 7));
+    }
+
+    return all.where((echeance) {
+      final echeanceDate = DateTime(
+        echeance.endDate.year,
+        echeance.endDate.month,
+        echeance.endDate.day,
+      );
+
+      return echeanceDate.isAfter(today.subtract(const Duration(days: 1))) &&
+          echeanceDate.isBefore(nextPeriod.add(const Duration(days: 1)));
+    }).toList();
+  }
+
+  /// Récupère toutes les échéances qui prennent fin dans les 7jours.
+  ///
+  /// Retourne 'nul' si aucune échéance n'a été trouvé.
+
   // -----------------------------------------------------------------
   // CRUD – Update
   // -----------------------------------------------------------------

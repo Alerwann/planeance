@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'echeance_model.g.dart';
 
 @HiveType(typeId: 1)
-class EcheanceModel {
+class EcheanceModel extends HiveObject {
   @HiveField(0)
   final String echeanceName;
 
@@ -26,5 +26,4 @@ class EcheanceModel {
     required this.directoryId,
     this.description,
   });
- 
 }
