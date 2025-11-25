@@ -1,4 +1,3 @@
-
 import 'package:hive/hive.dart';
 
 part 'directory_model.g.dart';
@@ -11,5 +10,12 @@ class DirectoryModel {
   @HiveField(1)
   final String name;
 
-  DirectoryModel({required this.id, required this.name});
+  @HiveField(2)
+  final String categoryId;
+
+  DirectoryModel({
+    required this.id,
+    required this.name,
+    required this.categoryId,
+  });
 }

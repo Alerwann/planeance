@@ -35,13 +35,18 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                 ),
                 child: InkWell(
                   onTap: () {
-                 
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            directP.getCategoryHome(dossier.categoryId),
+                      ),
+                    );
                   },
                   borderRadius: BorderRadius.circular(20),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-             
                       Opacity(
                         opacity: 0.2,
                         child: Icon(
@@ -67,13 +72,13 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                 ),
               );
             },
-            
           );
-        
         },
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){}, child: Icon(Icons.add),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
     );
-    
   }
 }

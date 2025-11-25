@@ -19,17 +19,20 @@ class DirectoryModelAdapter extends TypeAdapter<DirectoryModel> {
     return DirectoryModel(
       id: fields[0] as int,
       name: fields[1] as String,
+      categoryId: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, DirectoryModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.categoryId);
   }
 
   @override

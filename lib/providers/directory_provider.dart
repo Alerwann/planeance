@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
-import 'package:planeance/data/models/directory/directory_model.dart';
+import 'package:planeance/pages/all_type_echeances/bill/bill_home.dart';
+import 'package:planeance/pages/all_type_echeances/job/job_home.dart';
+import 'package:planeance/planeance.dart';
 import 'package:planeance/utils/hive_helper.dart';
 
 class DirectoryProvider extends ChangeNotifier with HiveHelper {
   final Box<DirectoryModel> _box = Hive.box<DirectoryModel>(
     Constant.directoryBoxName,
   );
+
+  DirectoryProvider() {
+    ensureDefaults();
+  }
 
   List<DirectoryModel> get all => _box.values.toList();
 
@@ -23,15 +29,27 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
     if (_box.isEmpty) {
       return await handle(
         () => _box.addAll([
-  
-          DirectoryModel(id: 1, name: 'Santé'),
-          DirectoryModel(id: 2, name: 'Finances'),
-          DirectoryModel(id: 3, name: 'Personnel'),
+          DirectoryModel(id: 1, name: 'Santé', categoryId: 'health'),
+          DirectoryModel(id: 2, name: 'Factures', categoryId: 'bill'),
+          DirectoryModel(id: 3, name: 'Travail', categoryId: 'job'),
         ]),
         'Initialisation des répertoires',
       );
     }
     return true;
+  }
+
+  Widget getCategoryHome(String categoryId) {
+    switch (categoryId) {
+      case 'health':
+        return HealthHome();
+      case 'bill':
+        return BillHome();
+      case 'job':
+        return JobHome();
+      default:
+        return Homeshell();
+    }
   }
 
   // -----------------------------------------------------------------
