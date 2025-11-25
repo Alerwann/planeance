@@ -3,6 +3,8 @@ import 'package:planeance/data/models/directory/directory_model.dart';
 class Constant {
   static const String echeanceBoxName = 'echeances';
   static const String directoryBoxName = 'directory_v2';
+  static const String healthLinkBoxName = 'health_link';
+  static const String healthEcheanceBoxName = 'health_echeance';
 
   static const String daysPeriod = 'day';
   static const String weekPeriod = 'week';
@@ -17,6 +19,5 @@ class Constant {
     DirectoryModel(id: 6, name: 'Social', categoryId: 'social'),
     DirectoryModel(id: 7, name: 'Invitation', categoryId: 'meeting'),
     DirectoryModel(id: 8, name: 'Essai', categoryId: 'essai'),
-    
   ];
 }

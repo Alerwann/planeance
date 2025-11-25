@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
-import 'package:planeance/pages/all_type_echeances/bill/bill_home.dart';
 import 'package:planeance/pages/all_type_echeances/familly/familly_home.dart';
 import 'package:planeance/pages/all_type_echeances/job/job_home.dart';
 import 'package:planeance/pages/all_type_echeances/meeting/meeting_home.dart';
@@ -21,6 +20,13 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   }
 
   List<DirectoryModel> get all => _box.values.toList();
+
+  List<DirectoryModel> get availableDirectories {
+    final allIds = all.map((e) => e.categoryId).toSet();
+    return Constant.directoryList
+        .where((d) => !allIds.contains(d.categoryId))
+        .toList();
+  }
 
   bool _listIsFull = true;
 
