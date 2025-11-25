@@ -13,7 +13,7 @@ export 'providers/directory_provider.dart';
 export 'pages/home/home.dart';
 export 'pages/home/home_shell.dart';
 export 'pages/create_echeance/create_echeance.dart';
-export 'pages/all_type_echeances/handicap/handicap_home.dart';
+export 'pages/all_type_echeances/health/handicap/handicap_home.dart';
 export 'pages/all_type_echeances/health/health_home.dart';
 export 'pages/parameters/parameters.dart';
 

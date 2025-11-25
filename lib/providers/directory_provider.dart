@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
 import 'package:planeance/pages/all_type_echeances/bill/bill_home.dart';
+import 'package:planeance/pages/all_type_echeances/familly/familly_home.dart';
 import 'package:planeance/pages/all_type_echeances/job/job_home.dart';
+import 'package:planeance/pages/all_type_echeances/meeting/meeting_home.dart';
+import 'package:planeance/pages/all_type_echeances/social/social_home.dart';
+import 'package:planeance/pages/all_type_echeances/transport/transport_home.dart';
 import 'package:planeance/planeance.dart';
 import 'package:planeance/utils/hive_helper.dart';
 
@@ -13,9 +17,23 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
 
   DirectoryProvider() {
     ensureDefaults();
+    stateIsFull();
   }
 
   List<DirectoryModel> get all => _box.values.toList();
+
+  bool _listIsFull = true;
+
+  bool get listIsFull => _listIsFull;
+
+  void stateIsFull() {
+    if (all.length == Constant.directoryList.length) {
+      _listIsFull = true;
+    } else {
+      _listIsFull = false;
+    }
+    notifyListeners();
+  }
 
   // -----------------------------------------------------------------
   // CRUD – Create
@@ -28,11 +46,7 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   Future<bool> ensureDefaults() async {
     if (_box.isEmpty) {
       return await handle(
-        () => _box.addAll([
-          DirectoryModel(id: 1, name: 'Santé', categoryId: 'health'),
-          DirectoryModel(id: 2, name: 'Factures', categoryId: 'bill'),
-          DirectoryModel(id: 3, name: 'Travail', categoryId: 'job'),
-        ]),
+        () => _box.addAll(Constant.directoryList),
         'Initialisation des répertoires',
       );
     }
@@ -47,6 +61,14 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
         return BillHome();
       case 'job':
         return JobHome();
+      case 'transport':
+        return TransportHome();
+      case 'familly':
+        return FamillyHome();
+      case 'social':
+        return SocialHome();
+      case 'meeting':
+        return MeetingHome();
       default:
         return Homeshell();
     }
@@ -59,8 +81,10 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   ///
   /// Retourne `true` si l’ajout a réussi, sinon `false`.
 
-  Future<bool> add(DirectoryModel e) {
-    return handle(() => _box.add(e), "Erreur lors de l'ajout");
+  Future<bool> add(DirectoryModel e) async {
+    final result = await handle(() => _box.add(e), "Erreur lors de l'ajout");
+    stateIsFull();
+    return result;
   }
 
   // -----------------------------------------------------------------
@@ -95,20 +119,36 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   /// Supprime l’échéance correspondant à la **clé** fournie.
   ///
   /// Retourne `true` si la suppression a réussi, sinon `false`.
-  Future<bool> deleteOne(int key) {
-    return handle(
+  Future<bool> deleteOne(int key) async {
+    final result = await handle(
       () => _box.delete(key),
       "Erreur lors de la suppression de l'élement de la clé $key",
     );
+    stateIsFull();
+    return result;
+  }
+
+  /// Supprime l’échéance correspondant à l'**index** fourni.
+  ///
+  /// Retourne `true` si la suppression a réussi, sinon `false`.
+  Future<bool> deleteAt(int index) async {
+    final result = await handle(
+      () => _box.deleteAt(index),
+      "Erreur lors de la suppression de l'élement à l'index $index",
+    );
+    stateIsFull();
+    return result;
   }
 
   /// Supprime **toutes** les échéances de la boîte.
   ///
   /// Retourne `true` si le nettoyage a réussi, sinon `false`.
-  Future<bool> deleteAll() {
-    return handle(
+  Future<bool> deleteAll() async {
+    final result = await handle(
       () => _box.clear(),
       "Erreur dans le nettoyage total des echeances ",
     );
+    stateIsFull();
+    return result;
   }
 }

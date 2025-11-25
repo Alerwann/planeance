@@ -40,8 +40,6 @@ class _CreateEcheanceState extends State<CreateEcheance> {
     super.dispose();
   }
 
-
-
   /// Construit l’interface de création d’une échéance.
   ///
   /// Le widget est composé d’un [Form] contenant :
@@ -79,8 +77,9 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
-                      validator: (champs) =>
-                          champs == null || champs.isEmpty ? 'Champ obligatoire' : null,
+                      validator: (champs) => champs == null || champs.isEmpty
+                          ? 'Champ obligatoire'
+                          : null,
                     ),
                     const SizedBox(height: 16),
 
@@ -171,7 +170,7 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                content: Text(
+                                    content: Text(
                                       echeanceP.errorMessage ??
                                           'Erreur inconnue lors de l\'ajout',
                                     ),
@@ -183,14 +182,25 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                       child: const Text('Valider'),
                     ),
                     if (kDebugMode)
-                      TextButton(
-                        onPressed: () async {
-                          await dirProvider.deleteAll();
-                          await dirProvider.ensureDefaults();
+                      Column(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              await dirProvider.deleteAll();
+                              await dirProvider.ensureDefaults();
 
-                          setState(() {});
-                        },
-                        child: Text("Clear"),
+                              setState(() {});
+                            },
+                            child: Text("Clear"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await dirProvider.deleteAt(dirProvider.all.length-1);
+                              dirProvider.stateIsFull();
+                            },
+                            child: Text("Delete one"),
+                          ),
+                        ],
                       ),
                   ],
                 ),

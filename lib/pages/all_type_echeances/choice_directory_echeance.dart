@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeance/pages/all_type_echeances/add_directory.dart';
 import 'package:planeance/planeance.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,37 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                       ),
                     );
                   },
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            "Suppression de ${directP.all[index].name}",
+                          ),
+                          content: Text(
+                            "Voulez vous supprimer toute la catégorie?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                await directP.deleteAt(index);
+                                if(mounted)
+                            {    Navigator.pop(context);}
+                              },
+                              child: Text("Oui"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Non"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   borderRadius: BorderRadius.circular(20),
                   child: Stack(
                     alignment: Alignment.center,
@@ -75,9 +107,23 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButton: Consumer<DirectoryProvider>(
+        builder: (context, directP, _) {
+          return FloatingActionButton(
+            onPressed: () {
+              directP.listIsFull
+                  ? null
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddDirectory()),
+                    );
+            },
+            backgroundColor: directP.listIsFull
+                ? Colors.grey
+                : Theme.of(context).colorScheme.primary,
+            child: Icon(Icons.add),
+          );
+        },
       ),
     );
   }
