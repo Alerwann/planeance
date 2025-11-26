@@ -14,16 +14,20 @@ class EcheanceModel extends HiveObject {
   final DateTime endDate;
 
   @HiveField(3)
-  final int directoryId;
+  final String category;
 
   @HiveField(4)
+  final String? subType;
+
+  @HiveField(5)
   final String? description;
 
   EcheanceModel({
     required this.echeanceName,
     required this.beginDate,
     required this.endDate,
-    required this.directoryId,
+    required this.category,
+    this.subType,
     this.description,
   });
 }

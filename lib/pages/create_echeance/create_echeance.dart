@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planeance/planeance.dart';
+import 'package:planeance/services/strategies/strategy_factory.dart';
 import 'package:planeance/widget/tap_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,10 @@ class _CreateEcheanceState extends State<CreateEcheance> {
   int? _selectedDirectoryId;
   DateTime? _beginDate;
   DateTime? _endDate;
+
+  // Stratégie
+  List<String> _subTypes = [];
+  String? _selectedSubType;
 
   @override
   void dispose() {
@@ -100,12 +105,59 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                           )
                           .toList(),
                       initialValue: _selectedDirectoryId,
-                      onChanged: (v) =>
-                          setState(() => _selectedDirectoryId = v),
+                      onChanged: (v) {
+                        setState(() {
+                          _selectedDirectoryId = v;
+                          _selectedSubType = null;
+                          _subTypes = [];
+                        });
+
+                        if (v != null) {
+                          final selectedDir = dirProvider.all.firstWhere(
+                            (d) => d.id == v,
+                          );
+                          final strategy = StrategyFactory.getStrategy(
+                            selectedDir.categoryId,
+                          );
+                          setState(() {
+                            _subTypes = strategy.getAvailableSubTypes();
+                          });
+                        }
+                      },
                       validator: (v) =>
                           v == null ? 'Sélectionnez un domaine' : null,
                     ),
                     const SizedBox(height: 16),
+
+                    // Sous-type (si disponible)
+                    if (_subTypes.isNotEmpty) ...[
+                      DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Type de précision',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                        items: _subTypes
+                            .map(
+                              (t) => DropdownMenuItem<String>(
+                                value: t,
+                                child: Text(
+                                  t,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            )
+                            .toList(),
+
+                        onChanged: (v) => setState(() => _selectedSubType = v),
+                        validator: (v) =>
+                            v == null ? 'Précision requise' : null,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Date de début
                     TapInputWideget(
@@ -139,11 +191,16 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                           : () async {
                               FocusScope.of(context).unfocus();
                               if (_formKey.currentState!.validate()) {
+                                final selectedDir = dirProvider.all.firstWhere(
+                                  (d) => d.id == _selectedDirectoryId,
+                                );
+
                                 final newEcheance = EcheanceModel(
                                   echeanceName: _nameCtrl.text,
                                   beginDate: _beginDate!,
                                   endDate: _endDate!,
-                                  directoryId: _selectedDirectoryId!,
+                                  category: selectedDir.categoryId,
+                                  subType: _selectedSubType,
                                 );
 
                                 final ok = await echeanceP.add(newEcheance);
@@ -165,6 +222,8 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                                     _selectedDirectoryId = null;
                                     _beginDate = null;
                                     _endDate = null;
+                                    _selectedSubType = null;
+                                    _subTypes = [];
                                   });
                                 }
                               } else {
@@ -195,7 +254,9 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                           ),
                           TextButton(
                             onPressed: () async {
-                              await dirProvider.deleteAt(dirProvider.all.length-1);
+                              await dirProvider.deleteAt(
+                                dirProvider.all.length - 1,
+                              );
                               dirProvider.stateIsFull();
                             },
                             child: Text("Delete one"),

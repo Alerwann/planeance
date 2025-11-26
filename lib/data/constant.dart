@@ -15,9 +15,6 @@ class Constant {
     DirectoryModel(id: 2, name: 'Factures', categoryId: 'bill'),
     DirectoryModel(id: 3, name: 'Travail', categoryId: 'job'),
     DirectoryModel(id: 4, name: 'Tansport', categoryId: 'transport'),
-    DirectoryModel(id: 5, name: 'Famille', categoryId: 'familly'),
     DirectoryModel(id: 6, name: 'Social', categoryId: 'social'),
-    DirectoryModel(id: 7, name: 'Invitation', categoryId: 'meeting'),
-    DirectoryModel(id: 8, name: 'Essai', categoryId: 'essai'),
   ];
 }
