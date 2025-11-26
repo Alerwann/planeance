@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planeance/data/constant.dart';
 import 'package:planeance/planeance.dart';
+import 'package:planeance/widget/alerte_dialogue/alert_dialogue_directory.dart';
+import 'package:planeance/widget/alerte_dialogue/alerte_delete.dart';
 import 'package:provider/provider.dart';
 
 class ChoiceDirectoryEcheance extends StatefulWidget {
@@ -11,40 +14,7 @@ class ChoiceDirectoryEcheance extends StatefulWidget {
 }
 
 class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
-  Future<void> _showDeleteDialog(
-    BuildContext context,
-    DirectoryProvider directP,
-    int index,
-  ) async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Suppression de ${directP.all[index].name}"),
-          content: Text(
-            "Voulez vous supprimer toute la catégorie? (toutes les échéances de cette catégorie seront supprimées.)",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                await directP.deleteAt(index);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Oui"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Non"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +48,7 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                       ),
                     );
                   },
-                  onLongPress: () => _showDeleteDialog(context, directP, index),
+                  onLongPress: () =>AlerteDelete.showDeleteDialog (index,context,Constant.typeDirectory),
                   borderRadius: BorderRadius.circular(20),
                   child: Stack(
                     alignment: Alignment.center,
@@ -109,7 +79,7 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                         child: IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () =>
-                              _showDeleteDialog(context, directP, index),
+                              AlerteDelete.showDeleteDialog(index,context,Constant.typeDirectory)
                         ),
                       ),
                     ],
@@ -129,60 +99,7 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                   : showDialog(
                       context: context,
                       builder: (context) {
-                        DirectoryModel? selectedDirectory =
-                            directP.availableDirectories.first;
-                        return AlertDialog(
-                          title: Text("Ajout d'une catégorie"),
-                          content: Text('quelle catégorie ajouter'),
-                          actions: [
-                            DropdownButtonFormField<DirectoryModel>(
-                              initialValue: selectedDirectory,
-                              decoration: InputDecoration(
-                                labelText: "Nom du domaine",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                              items: directP.availableDirectories
-                                  .map(
-                                    (d) => DropdownMenuItem<DirectoryModel>(
-                                      value: d,
-                                      child: Text(d.name),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (DirectoryModel? value) {
-                                if (value != null) {
-                                  selectedDirectory = value;
-                                }
-                              },
-                            ),
-
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () async {
-                                    if (selectedDirectory != null) {
-                                      await directP.add(selectedDirectory!);
-                                      if (context.mounted) {
-                                        Navigator.pop(context);
-                                      }
-                                    }
-                                  },
-                                  child: Text("Ajout"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Annuler"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
+                        return AlertDialogueDirectory(directP: directP);
                       },
                     );
             },

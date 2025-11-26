@@ -123,6 +123,15 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
     );
   }
 
+  Future<bool> deleteAt(int index) async {
+    final result = await handle(
+      () => _box.deleteAt(index),
+      "Erreur lors de la suppression de l'élement à l'index $index",
+    );
+
+    return result;
+  }
+
   /// Supprime **toutes** les échéances de la boîte.
   ///
   /// Retourne `true` si le nettoyage a réussi, sinon `false`.

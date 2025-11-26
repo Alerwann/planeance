@@ -6,6 +6,9 @@ class Constant {
   static const String healthLinkBoxName = 'health_link';
   static const String healthEcheanceBoxName = 'health_echeance';
 
+  static const String typeEcheance = 'echeance';
+  static const String typeDirectory = 'directory';
+
   static const String daysPeriod = 'day';
   static const String weekPeriod = 'week';
   static const String monthPeriod = 'month';

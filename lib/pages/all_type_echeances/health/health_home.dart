@@ -15,7 +15,19 @@ class _HealthHomeState extends State<HealthHome> {
       appBar: AppBar(title: Text("Santé")),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog();
+                  },
+                );
+              },
+              child: Text("Ajout d'une échéance"),
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
