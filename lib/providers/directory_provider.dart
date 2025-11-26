@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
-import 'package:planeance/pages/all_type_echeances/familly/familly_home.dart';
 import 'package:planeance/pages/all_type_echeances/job/job_home.dart';
-import 'package:planeance/pages/all_type_echeances/meeting/meeting_home.dart';
 import 'package:planeance/pages/all_type_echeances/social/social_home.dart';
 import 'package:planeance/pages/all_type_echeances/transport/transport_home.dart';
 import 'package:planeance/planeance.dart';
@@ -69,12 +67,8 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
         return JobHome();
       case 'transport':
         return TransportHome();
-      case 'familly':
-        return FamillyHome();
       case 'social':
         return SocialHome();
-      case 'meeting':
-        return MeetingHome();
       default:
         return Homeshell();
     }

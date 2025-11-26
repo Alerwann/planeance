@@ -17,7 +17,7 @@ export 'pages/home/home_shell.dart';
 
 export 'pages/create_echeance/create_echeance.dart';
 
-export 'pages/all_type_echeances/health/handicap/handicap_home.dart';
+
 export 'pages/all_type_echeances/health/health_home.dart';
 export 'pages/all_type_echeances/health/links_health_utils.dart';
 export 'pages/all_type_echeances/bill/bill_home.dart';

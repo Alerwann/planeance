@@ -4,7 +4,7 @@ import 'package:planeance/data/constant.dart';
 import 'package:planeance/data/models/echeance/echeance_model.dart';
 import 'package:planeance/utils/hive_helper.dart';
 
-/// Provider qui gère les opérations CRUD sur les [EcheanceModel] via Hive.
+/// Provider qui gère les opérationssur les [EcheanceModel] via Hive.
 ///
 /// Ce provider expose les méthodes suivantes :
 /// * [add](cci:1://file:///Volumes/T9/programmation/flutter/echeance_calcul/echeance_calcul/lib/providers/echeance_provider.dart:28:2-30:3) : ajoute une nouvelle échéance.
@@ -93,9 +93,33 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
     }).toList();
   }
 
-  /// Récupère toutes les échéances qui prennent fin dans les 7jours.
+  /// Récupère toutes les échances pour une catégorie
   ///
-  /// Retourne 'nul' si aucune échéance n'a été trouvé.
+  /// La catégorie en entrée est identifié par [categoryId]
+  ///
+  ///Retourne 'null' si aucune échéance n'est trouvé
+
+  List<EcheanceModel> getEcheanceByType(String categoryId) {
+    return all.where((echeance) {
+      return categoryId == echeance.categoryId;
+    }).toList();
+  }
+
+  /// Crée une liste de longueur personnalisé pour une catégorie choisi
+  ///
+  /// La catégorie en entrée est identifié par [categoryId] et [nbEcheance] fixe la taille
+  ///
+  ///Retourne 'null' si aucune échéance n'est trouvé
+
+  List<EcheanceModel> getCustomListEcheance(String categoryId, int nbEcheance) {
+    final List<EcheanceModel> allByCat = getEcheanceByType(categoryId);
+
+    if (allByCat.length >= nbEcheance) {
+      return allByCat.sublist(0, nbEcheance);
+    } else {
+      return allByCat;
+    }
+  }
 
   // -----------------------------------------------------------------
   // CRUD – Update

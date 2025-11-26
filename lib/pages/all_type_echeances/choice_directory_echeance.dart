@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planeance/data/constant.dart';
 import 'package:planeance/planeance.dart';
 import 'package:planeance/widget/alerte_dialogue/alert_dialogue_directory.dart';
 import 'package:planeance/widget/alerte_dialogue/alerte_delete.dart';
@@ -48,7 +47,7 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                       ),
                     );
                   },
-                  onLongPress: () =>AlerteDelete.showDeleteDialog (index,context,Constant.typeDirectory),
+                  onLongPress: () =>AlerteDelete.showDeleteDialog (dossier, null, context),
                   borderRadius: BorderRadius.circular(20),
                   child: Stack(
                     alignment: Alignment.center,
@@ -79,7 +78,7 @@ class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
                         child: IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () =>
-                              AlerteDelete.showDeleteDialog(index,context,Constant.typeDirectory)
+                              AlerteDelete.showDeleteDialog( dossier,null, context)
                         ),
                       ),
                     ],

@@ -23,13 +23,14 @@ class EcheanceModelAdapter extends TypeAdapter<EcheanceModel> {
       category: fields[3] as String,
       subType: fields[4] as String?,
       description: fields[5] as String?,
+      categoryId: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, EcheanceModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.echeanceName)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class EcheanceModelAdapter extends TypeAdapter<EcheanceModel> {
       ..writeByte(4)
       ..write(obj.subType)
       ..writeByte(5)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(6)
+      ..write(obj.categoryId);
   }
 
   @override

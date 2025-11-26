@@ -199,8 +199,9 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                                   echeanceName: _nameCtrl.text,
                                   beginDate: _beginDate!,
                                   endDate: _endDate!,
-                                  category: selectedDir.categoryId,
+                                  category: selectedDir.name,
                                   subType: _selectedSubType,
+                                  categoryId: selectedDir.categoryId
                                 );
 
                                 final ok = await echeanceP.add(newEcheance);

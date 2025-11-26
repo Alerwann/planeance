@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planeance/data/constant.dart';
 import 'package:planeance/planeance.dart';
-import 'package:planeance/widget/card_list_title.dart';
+import 'package:planeance/widget/card_modif_delete.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -19,67 +19,66 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Planéchance')),
-      body: Consumer<EcheanceProvider>(
-        builder: (context, echeanceP, _) {
-          final echeancesList = echeanceP.getEcheancesForPeriod(wichSelected);
-          return Center(
-            child: Column(
-           spacing: 15,
-              children: [
-                if (kDebugMode)
-                  ElevatedButton(
-                    onPressed: () async {
-                      await echeanceP.deleteAll();
-                    },
-                    child: Text("Réinitialiser box echeance"),
+      body: SingleChildScrollView(
+        child: Consumer<EcheanceProvider>(
+          builder: (context, echeanceP, _) {
+            final echeancesList = echeanceP.getEcheancesForPeriod(wichSelected);
+            return Center(
+              child: Column(
+                spacing: 15,
+                children: [
+                  if (kDebugMode)
+                    ElevatedButton(
+                      onPressed: () async {
+                        await echeanceP.deleteAll();
+                      },
+                      child: Text("Réinitialiser box echeance"),
+                    ),
+                  Text(
+                    "Echéance en apporche",
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                Text(
-                  "Echéance en apporche",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
 
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 5,
-                  alignment: WrapAlignment.center,
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 5,
+                    alignment: WrapAlignment.center,
 
-                  children: [
-                    buttonChoice(Constant.daysPeriod, echeanceP),
-                    buttonChoice(Constant.weekPeriod, echeanceP),
-                    buttonChoice(Constant.monthPeriod, echeanceP),
-                  ],
-                ),
+                    children: [
+                      buttonChoice(Constant.daysPeriod, echeanceP),
+                      buttonChoice(Constant.weekPeriod, echeanceP),
+                      buttonChoice(Constant.monthPeriod, echeanceP),
+                    ],
+                  ),
 
-                Text("Nombre total d'échances : ${echeanceP.all.length}"),
+                  Text("Nombre total d'échances : ${echeanceP.all.length}"),
 
-                Text(
-                  "${_getTitleForSelection(wichSelected)} : ${echeancesList.length}",
-                ),
+                  Text(
+                    "${_getTitleForSelection(wichSelected)} : ${echeancesList.length}",
+                  ),
 
-                echeancesList.isEmpty
-                    ? Text(
-                        "Bonne nouvelle!\nTu n'as pas d'échéances",
-                        style: Theme.of(context).textTheme.titleMedium,
-                        textAlign: TextAlign.center,
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true, // Important dans une Column
-                        itemCount: echeancesList.length,
-                        itemBuilder: (context, index) {
-                          final echeance = echeancesList[index];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CardListTitle(
-                              echeanceP: echeanceP,
-                              echeance: echeance,
-                            )
-                          );
-                        },
-                      ),
-              ],
-            ),
-          );
-        },
+                  echeancesList.isEmpty
+                      ? Text(
+                          "Bonne nouvelle!\nTu n'as pas d'échéances",
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true, // Important dans une Column
+                          itemCount: echeancesList.length,
+                          itemBuilder: (context, index) {
+                            final echeance = echeancesList[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CardEcheance(echeance: echeance),
+                            );
+                          },
+                        ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
