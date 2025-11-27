@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planeance/pages/all_type_echeances/health/all_echeance.dart';
 import 'package:planeance/planeance.dart';
+
 import 'package:planeance/widget/card_modif_delete.dart';
 import 'package:provider/provider.dart';
 
@@ -40,11 +41,11 @@ class _HealthHomeState extends State<HealthHome> {
 
                 ElevatedButton(
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog();
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateEcheance(),
+                      ),
                     );
                   },
                   child: Text("Ajout d'une échéance"),

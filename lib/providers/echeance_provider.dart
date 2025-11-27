@@ -113,6 +113,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
 
   List<EcheanceModel> getCustomListEcheance(String categoryId, int nbEcheance) {
     final List<EcheanceModel> allByCat = getEcheanceByType(categoryId);
+    allByCat.sort((a, b) => a.endDate.compareTo(b.endDate));
 
     if (allByCat.length >= nbEcheance) {
       return allByCat.sublist(0, nbEcheance);

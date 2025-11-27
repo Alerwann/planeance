@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeance/planeance.dart';
 import 'package:planeance/widget/alerte_dialogue/alerte_delete.dart';
+import 'package:planeance/widget/alerte_dialogue/modif_echeance.dart';
 import 'package:provider/provider.dart';
 
 class AllEcheance extends StatefulWidget {
@@ -45,7 +46,15 @@ class _AllEcheanceState extends State<AllEcheance> {
                             },
                           ),
                           trailing: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ModifEcheance(echeanceInput: echeance),
+                                ),
+                              );
+                            },
                             icon: Icon(
                               Icons.mode_edit_outline_rounded,
                               color: Colors.grey,
