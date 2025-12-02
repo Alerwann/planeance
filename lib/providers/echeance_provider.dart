@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
 import 'package:planeance/data/models/echeance/echeance_model.dart';
-import 'package:planeance/utils/hive_helper.dart';
+
 
 /// Provider qui gère les opérationssur les [EcheanceModel] via Hive.
 ///
@@ -16,7 +16,7 @@ import 'package:planeance/utils/hive_helper.dart';
 ///
 /// Chaque méthode retourne un `Future<bool>` indiquant le succès (`true`) ou l’échec (`false`)
 /// de l’opération. En cas d’erreur, le message est affiché en mode debug grâce à `kDebugMode`.
-class EcheanceProvider extends ChangeNotifier with HiveHelper {
+class EcheanceProvider extends ChangeNotifier  {
   /// Boîte Hive contenant les objets [EcheanceModel].
   final Box<EcheanceModel> _box = Hive.box<EcheanceModel>(
     Constant.echeanceBoxName,

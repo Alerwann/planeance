@@ -193,7 +193,7 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                     ElevatedButton(
                       onPressed: echeanceP.isLoading
                           ? null
-                          : () async {
+                          : ()  {
                               FocusScope.of(context).unfocus();
                               if (_formKey.currentState!.validate()) {
                                 final selectedDir = dirProvider.all.firstWhere(
@@ -242,17 +242,17 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                       Column(
                         children: [
                           TextButton(
-                            onPressed: () async {
-                              await dirProvider.deleteAll();
-                              await dirProvider.ensureDefaults();
+                            onPressed: ()  {
+                               dirProvider.deleteAll();
+                              dirProvider.ensureDefaults();
 
                               setState(() {});
                             },
                             child: Text("Clear"),
                           ),
                           TextButton(
-                            onPressed: () async {
-                              await dirProvider.deleteAt(
+                            onPressed: ()  {
+                               dirProvider.deleteAt(
                                 dirProvider.all.length - 1,
                               );
                               dirProvider.stateIsFull();

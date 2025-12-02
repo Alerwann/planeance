@@ -40,7 +40,7 @@ class AlertDialogueDirectory extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 if (selectedDirectory != null) {
-                  await directP.add(selectedDirectory!);
+                   directP.add(selectedDirectory!);
                   if (context.mounted) {
                     Navigator.pop(context);
                   }

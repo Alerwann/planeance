@@ -5,9 +5,9 @@ import 'package:planeance/pages/all_type_echeances/job/job_home.dart';
 import 'package:planeance/pages/all_type_echeances/social/social_home.dart';
 import 'package:planeance/pages/all_type_echeances/transport/transport_home.dart';
 import 'package:planeance/planeance.dart';
-import 'package:planeance/utils/hive_helper.dart';
 
-class DirectoryProvider extends ChangeNotifier with HiveHelper {
+
+class DirectoryProvider extends ChangeNotifier  {
   final Box<DirectoryModel> _box = Hive.box<DirectoryModel>(
     Constant.directoryBoxName,
   );
@@ -47,14 +47,16 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   /// Retourne `true` si la création est inutile ou si l'initialisation est réusie.
   /// Sinon retourne `false`.
 
-  Future<bool> ensureDefaults() async {
+  (bool, String) ensureDefaults() {
     if (_box.isEmpty) {
-      return await handle(
-        () => _box.addAll(Constant.directoryList),
-        'Initialisation des répertoires',
-      );
+      try {
+        _box.addAll(Constant.directoryList);
+        stateIsFull();
+      } catch (e) {
+        return (false, "Echec de l'initialisation par défaut des donées : $e");
+      }
     }
-    return true;
+    return (true, "Les données sont bien initialisé");
   }
 
   Widget getCategoryHome(String categoryId) {
@@ -79,12 +81,16 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   // -----------------------------------------------------------------
   /// Ajoute une nouvelle [DirectoryModel] dans la boîte.
   ///
-  /// Retourne `true` si l’ajout a réussi, sinon `false`.
+  /// Retourne `true` si l’ajout a réussi, sinon `false` ainsi qu'un message d'information.
 
-  Future<bool> add(DirectoryModel e) async {
-    final result = await handle(() => _box.add(e), "Erreur lors de l'ajout");
-    stateIsFull();
-    return result;
+  (bool, String) add(DirectoryModel value) {
+    try {
+      _box.add(value);
+      stateIsFull();
+      return (true, "La lise de répertoire est à jour");
+    } catch (e) {
+      return (false, "Erreure de mise à jour de la liste :$e");
+    }
   }
 
   // -----------------------------------------------------------------
@@ -106,11 +112,15 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   /// Met à jour l’échéance identifiée par [key] avec les nouvelles données [e].
   ///
   /// Retourne `true` si la mise à jour a réussi, sinon `false`.
-  Future<bool> update(int key, DirectoryModel e) {
-    return handle(
-      () => _box.put(key, e),
-      "Erreur lors de la mise à jour de ${e.name}",
-    );
+
+  (bool, String) update(int key, DirectoryModel d) {
+    try {
+      _box.put(key, d);
+      notifyListeners();
+      return (true, "Le répertoire ${d.name} est bien mise à jour ");
+    } catch (e) {
+      return (false, "Erreur lors de la mise à jour : $e");
+    }
   }
 
   // -----------------------------------------------------------------
@@ -118,37 +128,43 @@ class DirectoryProvider extends ChangeNotifier with HiveHelper {
   // -----------------------------------------------------------------
   /// Supprime l’échéance correspondant à la **clé** fournie.
   ///
-  /// Retourne `true` si la suppression a réussi, sinon `false`.
-  Future<bool> deleteOne(int key) async {
-    final result = await handle(
-      () => _box.delete(key),
-      "Erreur lors de la suppression de l'élement de la clé $key",
-    );
-    stateIsFull();
-    return result;
+  /// Retourne `true` si la suppression a réussi, sinon `false` ainsi qu'un message d'information.
+
+  (bool, String) deleteOne(int key) {
+    try {
+      _box.delete(key);
+      stateIsFull();
+      return (true, "L'élément à été annulé avec succès");
+    } catch (e) {
+      return (false, "Erreur lors de la suppression : $e");
+    }
   }
 
   /// Supprime l’échéance correspondant à l'**index** fourni.
   ///
-  /// Retourne `true` si la suppression a réussi, sinon `false`.
-  Future<bool> deleteAt(int index) async {
-    final result = await handle(
-      () => _box.deleteAt(index),
-      "Erreur lors de la suppression de l'élement à l'index $index",
-    );
-    stateIsFull();
-    return result;
+  /// Retourne `true` si la suppression a réussi, sinon `false` ainsi qu'un message d'information.
+
+  (bool, String) deleteAt(int index) {
+    try {
+      _box.deleteAt(index);
+      stateIsFull();
+      return (true, "Le répertoir à été supprimé correctement");
+    } catch (e) {
+      return (false, "Erreur lors de la suppréssion du répertoir : $e");
+    }
   }
 
   /// Supprime **toutes** les échéances de la boîte.
   ///
-  /// Retourne `true` si le nettoyage a réussi, sinon `false`.
-  Future<bool> deleteAll() async {
-    final result = await handle(
-      () => _box.clear(),
-      "Erreur dans le nettoyage total des echeances ",
-    );
-    stateIsFull();
-    return result;
+  /// Retourne `true` si le nettoyage a réussi, sinon `false` ainsi qu'un message d'information.
+
+  (bool, String) deleteAll() {
+    try {
+      _box.clear();
+      stateIsFull();
+      return (true, "Liste réinitialisé avec succès");
+    } catch (e) {
+      return (false, "Erreure lors de la réinitialisation : $e");
+    }
   }
 }

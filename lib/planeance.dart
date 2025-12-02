@@ -25,5 +25,3 @@ export 'pages/all_type_echeances/bill/bill_home.dart';
 export 'pages/parameters/parameters.dart';
 
 
-
-// ajoute d’autres exports si besoin

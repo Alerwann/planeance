@@ -328,17 +328,17 @@ class _ModifEcheanceState extends State<ModifEcheance> {
                       Column(
                         children: [
                           TextButton(
-                            onPressed: () async {
-                              await dirProvider.deleteAll();
-                              await dirProvider.ensureDefaults();
+                            onPressed: ()  {
+                               dirProvider.deleteAll();
+                               dirProvider.ensureDefaults();
 
                               setState(() {});
                             },
                             child: Text("Clear"),
                           ),
                           TextButton(
-                            onPressed: () async {
-                              await dirProvider.deleteAt(
+                            onPressed: ()  {
+                               dirProvider.deleteAt(
                                 dirProvider.all.length - 1,
                               );
                               dirProvider.stateIsFull();

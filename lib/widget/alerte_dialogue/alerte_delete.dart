@@ -33,8 +33,8 @@ class AlerteDelete {
           ),
           actions: [
             TextButton(
-              onPressed: () async {
-                await directP.deleteOne(direct.key);
+              onPressed: ()  {
+                 directP.deleteOne(direct.key);
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
@@ -66,7 +66,7 @@ class AlerteDelete {
           content: Text("voulez-vous réellement supprimer l'échéance ?"),
           actions: [
             TextButton(
-              onPressed: () async {
+              onPressed: ()  {
                 echeanceP.deleteOne(echeance.key);
                 if (context.mounted) {
                   Navigator.pop(context);
