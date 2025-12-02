@@ -67,7 +67,7 @@ class AlerteDelete {
           actions: [
             TextButton(
               onPressed: () async {
-                await echeanceP.deleteOne(echeance.key);
+                echeanceP.deleteOne(echeance.key);
                 if (context.mounted) {
                   Navigator.pop(context);
                 }

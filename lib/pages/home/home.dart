@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
                   if (kDebugMode)
                     ElevatedButton(
                       onPressed: () {
-                        final (success, message) = echeanceP.delateAll();
+                        final (success, message) = echeanceP.deleteAll();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SuccesSnake.successSnake(success, message),
                         );

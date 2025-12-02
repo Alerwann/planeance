@@ -46,6 +46,8 @@ class _CreateEcheanceState extends State<CreateEcheance> {
     super.dispose();
   }
 
+
+
   /// Construit l’interface de création d’une échéance.
   ///
   /// Le widget est composé d’un [Form] contenant :
@@ -129,6 +131,8 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                           v == null ? 'Sélectionnez un domaine' : null,
                     ),
                     const SizedBox(height: 16),
+
+           
 
                     // Sous-type (si disponible)
                     if (_subTypes.isNotEmpty) ...[

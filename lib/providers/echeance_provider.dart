@@ -35,7 +35,6 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   ///
   /// Retourne `true` si l’ajout a réussi, sinon `false`.
 
-
   (bool, String) add(EcheanceModel echeance) {
     _isLoading = true;
     notifyListeners();
@@ -152,7 +151,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
       notifyListeners();
       return (true, "L'écheance ${echeance.echeanceName} a été mis à jour");
     } catch (e) {
-      return (true, "La mise à jour n'a pas été faite. Erreur : $e");
+      return (false, "La mise à jour n'a pas été faite. Erreur : $e");
     }
   }
 
@@ -164,7 +163,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   ///
   /// Retourne `true` si le nettoyage a réussi, sinon `false` ainsi qu'un message d'explication.
 
-  (bool, String) delateAt(int index) {
+  (bool, String) deleteAt(int index) {
     try {
       _box.deleteAt(index);
       notifyListeners();
@@ -177,7 +176,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   /// Supprime **toutes** les échéances de la boîte.
   ///
   /// Retourne `true` si le nettoyage a réussi, sinon `false`.
-  (bool, String) delateAll() {
+  (bool, String) deleteAll() {
     try {
       _box.clear();
       notifyListeners();
@@ -194,7 +193,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
 
   (bool, String) deleteOne(dynamic key) {
     try {
-      _box.deleteAt(key);
+      _box.delete(key);
       notifyListeners();
       return (true, 'Échéance supprimée avec succès');
     } catch (e) {
