@@ -6,18 +6,13 @@ import 'package:planeance/planeance.dart';
 import 'package:planeance/widget/card_modif_delete.dart';
 import 'package:provider/provider.dart';
 
-class HealthHome extends StatefulWidget {
+class HealthHome extends StatelessWidget {
   const HealthHome({super.key});
 
   @override
-  State<HealthHome> createState() => _HealthHomeState();
-}
-
-class _HealthHomeState extends State<HealthHome> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Santé")),
+    return  Scaffold(
+      appBar:  AppBar(title: Text("Santé")),
       body: Consumer<EcheanceProvider>(
         builder: (context, echeanceP, _) {
           final echeancesList = echeanceP.getCustomListEcheance('health', 3);

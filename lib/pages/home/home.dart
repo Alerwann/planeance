@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:planeance/data/constant.dart';
 import 'package:planeance/planeance.dart';
 import 'package:planeance/widget/card_modif_delete.dart';
+import 'package:planeance/widget/succes_snake.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -29,8 +30,11 @@ class _HomeState extends State<Home> {
                 children: [
                   if (kDebugMode)
                     ElevatedButton(
-                      onPressed: () async {
-                        await echeanceP.deleteAll();
+                      onPressed: () {
+                        final (success, message) = echeanceP.delateAll();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SuccesSnake.successSnake(success, message),
+                        );
                       },
                       child: Text("Réinitialiser box echeance"),
                     ),
@@ -52,6 +56,11 @@ class _HomeState extends State<Home> {
                   ),
 
                   Text("Nombre total d'échances : ${echeanceP.all.length}"),
+                  if (echeanceP.getEcheancePast().isNotEmpty)
+                    Text(
+                      "Nombre d'échéances dépasées : ${echeanceP.getEcheancePast().length}",
+                      style: TextStyle(color: Colors.red),
+                    ),
 
                   Text(
                     "${_getTitleForSelection(wichSelected)} : ${echeancesList.length}",

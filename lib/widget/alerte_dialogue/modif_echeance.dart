@@ -6,6 +6,7 @@ import 'package:planeance/providers/directory_provider.dart';
 import 'package:planeance/providers/echeance_provider.dart';
 import 'package:planeance/services/strategies/strategy_factory.dart';
 import 'package:planeance/widget/duration_picker_dialog.dart';
+import 'package:planeance/widget/succes_snake.dart';
 import 'package:planeance/widget/tap_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -260,16 +261,17 @@ class _ModifEcheanceState extends State<ModifEcheance> {
                       ),
                     ),
 
-                    // Bouton Valider
                     ElevatedButton(
-                      onPressed: echeanceP.isLoading
-                          ? null
-                          : () async {
-                              FocusScope.of(context).unfocus();
-                              if (_formKey.currentState!.validate()) {
-                                dirProvider.all.firstWhere(
-                                  (d) => d.id == _selectedDirectoryId,
-                                );
+                      onPressed: () {
+                        echeanceP.isLoading
+                            ? null
+                            : () {
+                                FocusScope.of(context).unfocus();
+                                if (_formKey.currentState!.validate()) {
+                                  dirProvider.all.firstWhere(
+                                    (d) => d.id == _selectedDirectoryId,
+                                  );
+                                }
 
                                 switch (chooseEnd) {
                                   case 0:
@@ -283,54 +285,45 @@ class _ModifEcheanceState extends State<ModifEcheance> {
                                   default:
                                     _endDate;
                                 }
+                              };
 
-                                final newEcheance = EcheanceModel(
-                                  echeanceName: _nameCtrl.text,
-                                  beginDate: _beginDate!,
-                                  endDate: _endDate!,
-                                  category: echeance.category,
-                                  subType: _selectedSubType,
-                                  categoryId: echeance.categoryId,
-                                  description: _descriptCtrl.text,
-                                );
+                        final newEcheance = EcheanceModel(
+                          echeanceName: _nameCtrl.text,
+                          beginDate: _beginDate!,
+                          endDate: _endDate!,
+                          category: echeance.category,
+                          subType: _selectedSubType,
+                          categoryId: echeance.categoryId,
+                          description: _descriptCtrl.text,
+                        );
+                        final (success, message) = echeanceP.update(
+                          echeance.key,
+                          newEcheance,
+                        );
 
-                                final ok = await echeanceP.update(echeance.key, newEcheance);
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SuccesSnake.successSnake(success, message),
+                          );
+                        }
+                        _formKey.currentState!.reset();
+                        _nameCtrl.clear();
+                        _beginCtrl.clear();
+                        _endCtrl.clear();
 
-                                if (ok && mounted) {
-                                  // ignore: use_build_context_synchronously
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Échéance ajoutée ✅'),
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  );
-                                  _formKey.currentState!.reset();
-                                  _nameCtrl.clear();
-                                  _beginCtrl.clear();
-                                  _endCtrl.clear();
+                        setState(() {
+                          _selectedDirectoryId = null;
+                          _beginDate = null;
+                          _endDate = null;
+                          _selectedSubType = null;
+                        });
 
-                                  setState(() {
-                                    _selectedDirectoryId = null;
-                                    _beginDate = null;
-                                    _endDate = null;
-                                    _selectedSubType = null;
-                                  });
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      echeanceP.errorMessage ??
-                                          'Erreur inconnue lors de l\'ajout',
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            },
-                      child: const Text('Valider'),
+                     
+                      },
+                      child: Text("Valider"),
                     ),
 
+          
                     if (kDebugMode)
                       Column(
                         children: [

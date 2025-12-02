@@ -25,7 +25,7 @@ class EcheanceModel extends HiveObject {
   @HiveField(6)
   final String categoryId;
 
-  EcheanceModel({
+   EcheanceModel({ 
     required this.echeanceName,
     required this.beginDate,
     required this.endDate,

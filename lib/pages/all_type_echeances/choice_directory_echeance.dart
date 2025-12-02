@@ -4,16 +4,8 @@ import 'package:planeance/widget/alerte_dialogue/alert_dialogue_directory.dart';
 import 'package:planeance/widget/alerte_dialogue/alerte_delete.dart';
 import 'package:provider/provider.dart';
 
-class ChoiceDirectoryEcheance extends StatefulWidget {
+class ChoiceDirectoryEcheance extends StatelessWidget {
   const ChoiceDirectoryEcheance({super.key});
-
-  @override
-  State<ChoiceDirectoryEcheance> createState() =>
-      _ChoiceDirectoryEcheanceState();
-}
-
-class _ChoiceDirectoryEcheanceState extends State<ChoiceDirectoryEcheance> {
-  
 
   @override
   Widget build(BuildContext context) {

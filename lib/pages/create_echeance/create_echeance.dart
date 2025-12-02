@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planeance/planeance.dart';
 import 'package:planeance/services/strategies/strategy_factory.dart';
+import 'package:planeance/widget/succes_snake.dart';
 import 'package:planeance/widget/tap_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -201,19 +202,21 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                                   endDate: _endDate!,
                                   category: selectedDir.name,
                                   subType: _selectedSubType,
-                                  categoryId: selectedDir.categoryId
+                                  categoryId: selectedDir.categoryId,
                                 );
 
-                                final ok = await echeanceP.add(newEcheance);
+                                final (success, message) = echeanceP.add(
+                                  newEcheance,
+                                );
 
-                                if (ok && mounted) {
+                                if (mounted) {
                                   // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Échéance ajoutée ✅'),
-                                      backgroundColor: Colors.green,
-                                    ),
+                                    SuccesSnake.successSnake(success, message),
                                   );
+                                }
+
+                                if (success) {
                                   _formKey.currentState!.reset();
                                   _nameCtrl.clear();
                                   _beginCtrl.clear();
@@ -227,16 +230,6 @@ class _CreateEcheanceState extends State<CreateEcheance> {
                                     _subTypes = [];
                                   });
                                 }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      echeanceP.errorMessage ??
-                                          'Erreur inconnue lors de l\'ajout',
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
                               }
                             },
                       child: const Text('Valider'),

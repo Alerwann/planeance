@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:planeance/data/constant.dart';
 import 'package:planeance/data/models/echeance/echeance_model.dart';
@@ -34,14 +35,20 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   ///
   /// Retourne `true` si l’ajout a réussi, sinon `false`.
 
-  Future<bool> add(EcheanceModel e) {
+
+  (bool, String) add(EcheanceModel echeance) {
     _isLoading = true;
     notifyListeners();
-    final handleVal = handle(() => _box.add(e), "Erreur lors de l'ajout");
-
-    _isLoading = false;
-    notifyListeners();
-    return handleVal;
+    try {
+      _box.add(echeance);
+      _isLoading = false;
+      notifyListeners();
+      return (true, "Ajout d'échéance réussie");
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return (false, "L'échéance n'a pas été ajouté. Erreur :$e");
+    }
   }
 
   // -----------------------------------------------------------------
@@ -56,6 +63,14 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   ///
   /// Retourne `null` si l’index est hors limites.
   EcheanceModel? getByIndex(int index) => _box.getAt(index);
+
+  List<EcheanceModel> getEcheancePast() {
+    final now = DateTime.now();
+
+    return all.where((echance) {
+      return echance.endDate.isBefore(now);
+    }).toList();
+  }
 
   /// Récupère toutes les échéances qui prennent fin dans les 7jours.
   ///
@@ -77,6 +92,7 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
       case Constant.monthPeriod:
         nextPeriod = today.add(const Duration(days: 30));
         break;
+
       default:
         nextPeriod = today.add(const Duration(days: 7));
     }
@@ -128,42 +144,61 @@ class EcheanceProvider extends ChangeNotifier with HiveHelper {
   /// Met à jour l’échéance identifiée par [key] avec les nouvelles données [e].
   ///
   /// Retourne `true` si la mise à jour a réussi, sinon `false`.
-  Future<bool> update(int key, EcheanceModel e) {
-    return handle(
-      () => _box.put(key, e),
-      "Erreur lors de la mise à jour de ${e.echeanceName}",
-    );
+
+  (bool, String) update(int key, EcheanceModel echeance) {
+    try {
+      _box.put(key, echeance);
+
+      notifyListeners();
+      return (true, "L'écheance ${echeance.echeanceName} a été mis à jour");
+    } catch (e) {
+      return (true, "La mise à jour n'a pas été faite. Erreur : $e");
+    }
   }
 
   // -----------------------------------------------------------------
   // CRUD – Delete
   // -----------------------------------------------------------------
-  /// Supprime l’échéance correspondant à la **clé** fournie.
+
+  /// Supprime l' échéance de la boîte selon son index.
   ///
-  /// Retourne `true` si la suppression a réussi, sinon `false`.
-  Future<bool> deleteOne(int key) {
-    return handle(
-      () => _box.delete(key),
-      "Erreur lors de la suppression de l'élement de la clé $key",
-    );
-  }
+  /// Retourne `true` si le nettoyage a réussi, sinon `false` ainsi qu'un message d'explication.
 
-  Future<bool> deleteAt(int index) async {
-    final result = await handle(
-      () => _box.deleteAt(index),
-      "Erreur lors de la suppression de l'élement à l'index $index",
-    );
-
-    return result;
+  (bool, String) delateAt(int index) {
+    try {
+      _box.deleteAt(index);
+      notifyListeners();
+      return (true, "L'échéance a été supprimée avec succès");
+    } catch (e) {
+      return (false, "Erreur lors de la suppression de l' échéance : $e");
+    }
   }
 
   /// Supprime **toutes** les échéances de la boîte.
   ///
   /// Retourne `true` si le nettoyage a réussi, sinon `false`.
-  Future<bool> deleteAll() {
-    return handle(
-      () => _box.clear(),
-      "Erreur dans le nettoyage total des echeances ",
-    );
+  (bool, String) delateAll() {
+    try {
+      _box.clear();
+      notifyListeners();
+      return (true, 'Toutes les échéances supprimées avec succès');
+    } catch (e) {
+      return (false, 'Erreur lors de la réinitialisation des échéances : $e');
+    }
+  }
+
+  /// Supprime l’échéance correspondant à la **clé** fournie.
+  ///
+  /// Retourne `true` si la suppression a réussi, sinon `false`.
+  /// Dans les deux cas un message explicatif est retourné
+
+  (bool, String) deleteOne(dynamic key) {
+    try {
+      _box.deleteAt(key);
+      notifyListeners();
+      return (true, 'Échéance supprimée avec succès');
+    } catch (e) {
+      return (false, 'Erreur lors de la suppression $e');
+    }
   }
 }

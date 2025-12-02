@@ -12,6 +12,7 @@ class Constant {
   static const String daysPeriod = 'day';
   static const String weekPeriod = 'week';
   static const String monthPeriod = 'month';
+  static const String yearPeriod = 'year';
 
   static final List<DirectoryModel> directoryList = [
     DirectoryModel(id: 1, name: 'Santé', categoryId: 'health'),
